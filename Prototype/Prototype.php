@@ -1,65 +1,65 @@
 <?php
-use DeepCopy\DeepCopy;
+class Sheep {
+    private $name;
+    private $time;
+    private $clonedWithDisease;
+    
+    public function __construct(string $name, ClonedSheep $clonedWithDisease)
+    {
+        $this->name = $name;
+        $this->clonedWithDisease = $clonedWithDisease;
+        $this->clonedWithDisease->ClonedSheep($this);
+        $this->time = new \DateTime();
+    }
+    
+    public function __clone()
+    {
+        $this->name = $this->name;
+        $this->time = new \DateTime();
+    
+        $this->clonedWithDisease->ClonedSheep($this);
+        $this->clonedWithDisease->sheep = $this;
+    }
+}
+class ClonedSheep{
+    public $sheep;
+    
+    public function __construct(Sheep $sheep)
+    {
+        $this->sheep = $sheep;
+    }
+}
 
-function deep_copy($var)
+function scienceIsCrazy()
 {
-    static $copier = null;
-
-    if (null === $copier) {
-        $copier = new DeepCopy(true);
+    $sheep = new Sheep("Dolly", clonedWithDisease);
+    $sheep->clonedWithDisease = new ClonedSheep($sheep);
+    
+    $clone = clone $sheep;
+    if ($sheep-> === $clone->name) {
+        echo "Primitive field values have been carried over to a clone. Yay!\n";
+    } else {
+        echo "Primitive field values have not been copied. Booo!\n";
     }
-
-    return $copier->copy($var);
-}
-
-abstract class Book {
-    protected $title;
-    protected $topic;
-    abstract function __clone();
-    public function getTitle() {
-        return $this->title;
+    if ($sheep->component === $clone->component) {
+        echo "Simple component has not been cloned. Booo!\n";
+    } else {
+        echo "Simple component has been cloned. Yay!\n";
     }
-    public function setTitle($title) {
-        $this->title = $title;
+    
+    if ($sheep->clonedWithDisease === $clone->clonedWithDisease) {
+        echo "Component with back reference has not been cloned. Booo!\n";
+    } else {
+        echo "Component with back reference has been cloned. Yay!\n";
     }
-    public function getTopic() {
-        return $this->topic;
-    }
-}
-
-class PHPBook extends Book {
-    public function __construct() {
-        $this->topic = 'PHP';
-    }
-    function __clone() {
+    
+    if ($sheep->clonedWithDisease->prototype === $clone->clonedWithDisease->prototype) {
+        echo "Component with back reference is linked to original object. Booo!\n";
+    } else {
+        echo "Component with back reference is linked to the clone. Yay!\n";
     }
 }
 
-class PythonBook extends Book {
-    public function __construct() {
-        $this->topic = 'Python';
-    }
-    function __clone() {
-    }
-}
+clientCode();
 
-//testy
-$phpbook1 = new PHPBook();
-$phpbook1->setTitle("Ksiazka1");
-$phpbook2 = clone $phpbook1;
-$phpbook2->setTitle("Ksiazka2");
-
-$pythonbook1 = new PythonBook();
-$pythonbook1->setTitle("Ksiazka1");
-$pythonbook2 = clone $pythonbook1;
-$pythonbook3 = deep_copy($pythonbook1);
-//$pythonbook2->setTitle("Ksiazka2");
-var_dump(spl_object_hash($pythonbook1));
-var_dump(spl_object_hash($pythonbook2));
-var_dump(spl_object_hash($pythonbook3));
-
-//echo "Kategoria: ".$phpbook1->getTopic()." Tytul: ".$phpbook1->getTitle()."<br />";
-//echo "Kategoria: ".$phpbook2->getTopic()." Tytul: ".$phpbook2->getTitle()."<br />";
-//echo "Kategoria: ".$pythonbook1->getTopic()." Tytul: ".$pythonbook1->getTitle()."<br />";
-//echo "Kategoria: ".$pythonbook2->getTopic()." Tytul: ".$pythonbook2->getTitle()."<br />";
 ?>
