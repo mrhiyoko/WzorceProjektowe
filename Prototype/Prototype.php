@@ -1,65 +1,52 @@
 <?php
 class Sheep {
-    private $name;
-    private $time;
-    private $clonedWithDisease;
-    
-    public function __construct(string $name, ClonedSheep $clonedWithDisease)
-    {
-        $this->name = $name;
-        $this->clonedWithDisease = $clonedWithDisease;
-        $this->clonedWithDisease->ClonedSheep($this);
-        $this->time = new \DateTime();
-    }
-    
-    public function __clone()
-    {
-        $this->name = $this->name;
-        $this->time = new \DateTime();
-    
-        $this->clonedWithDisease->ClonedSheep($this);
-        $this->clonedWithDisease->sheep = $this;
-    }
+    public $name;
+    public $time;
+    public $clonedWithDisease;
+
+
+//    public function __clone()
+//    {
+//        $this->time = clone $this->time;
+//        $this->clonedWithDisease = clone $this->clonedWithDisease;
+//        $this->clonedWithDisease->sheep = $this;
+//    }
 }
 class ClonedSheep{
-    public $sheep;
-    
-    public function __construct(Sheep $sheep)
+    public $dolly;
+
+    public function __construct(Sheep $dolly)
     {
-        $this->sheep = $sheep;
+        $this->dolly = $dolly;
     }
 }
 
 function scienceIsCrazy()
 {
-    $sheep = new Sheep("Dolly", clonedWithDisease);
+    $sheep = new Sheep;
+    $sheep->name = 'Dolly';
+    $sheep->time = new \DateTime;
     $sheep->clonedWithDisease = new ClonedSheep($sheep);
-    
-    $clone = clone $sheep;
-    if ($sheep-> === $clone->name) {
-        echo "Primitive field values have been carried over to a clone. Yay!\n";
+
+    $sheep2 = clone $sheep;
+    if ($sheep->name === $sheep2->name) {
+        echo "String cloned!\n";
     } else {
-        echo "Primitive field values have not been copied. Booo!\n";
+        echo "String cloning failed!\n";
     }
-    if ($sheep->component === $clone->component) {
-        echo "Simple component has not been cloned. Booo!\n";
+    if ($sheep->time === $sheep2->time) {
+        echo "Time object has not been cloned!\n";
     } else {
-        echo "Simple component has been cloned. Yay!\n";
+        echo "Time object has been cloned!!\n";
     }
-    
-    if ($sheep->clonedWithDisease === $clone->clonedWithDisease) {
-        echo "Component with back reference has not been cloned. Booo!\n";
+
+    if ($sheep->clonedWithDisease === $sheep2->clonedWithDisease) {
+        echo "Cloning process failed!\n";
     } else {
-        echo "Component with back reference has been cloned. Yay!\n";
-    }
-    
-    if ($sheep->clonedWithDisease->prototype === $clone->clonedWithDisease->prototype) {
-        echo "Component with back reference is linked to original object. Booo!\n";
-    } else {
-        echo "Component with back reference is linked to the clone. Yay!\n";
+        echo "Cloning object with references complete!\n";
     }
 }
 
-clientCode();
+scienceIsCrazy();
 
 ?>
